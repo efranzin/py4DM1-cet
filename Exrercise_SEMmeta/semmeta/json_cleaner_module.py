@@ -20,8 +20,9 @@ class JsonCleaner:
         Reads a JSON file and returns its content as a Python dict.
         """
 
-        # TODO (Task 2): implement this method
-        raise NotImplementedError("load_json is not implemented yet")
+	with open(jsfile, 'r', encoding='utf-8') as f:
+		data = json.load(f)
+	return data
 
 
     def clean_value(self, value):
