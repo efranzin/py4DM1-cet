@@ -7,6 +7,13 @@ import json
 import re
 
 
+def _validate_filename(filename):
+    if not isinstance(filename, str):
+        raise TypeError(f'Expected a str, got {type(filename).__name__}')
+    elif len(filename) == 0:
+        raise ValueError(f'{filename} must be a non-empty string')
+
+
 # Class for cleaning and formatting SEM metadata from JSON files
 class JsonCleaner:
     def __init__(self, cleaned_data=None):
@@ -20,11 +27,7 @@ class JsonCleaner:
         Reads a JSON file and returns its content as a Python dict.
         """
 
-        if not isinstance(jsfile, str):
-            raise TypeError(f'Expected a str, got {type(jsfile).__name__}')
-        elif len(jsfile) == 0:
-            raise ValueError(f'{jsfile} must be a non-empty string')
-
+        _validate_filename(jsfile)
         with open(jsfile, 'r', encoding='utf-8') as f:
             data = json.load(f)
         return data
@@ -86,13 +89,14 @@ class JsonCleaner:
         if not isinstance(data, dict):
             raise TypeError(f'Expected a dict, got {type(data).__name__}')
 
+        clean_data = {}
         for key, value in data.items():
             if value is not None:
                 if isinstance(value, str):
-                    self.cleaned_data[key] = self.clean_value(value)
+                    clean_data[key] = self.clean_value(value)
                 else:
-                    self.cleaned_data[key] = value
-        return self.cleaned_data
+                    clean_data[key] = value
+        return clean_data
 
 
     def process(self, jsfile):
@@ -109,8 +113,11 @@ class JsonCleaner:
         Returns:
             the cleaned metadata dictionary
         """
-        # TODO (Task 2): implement this method
-        raise NotImplementedError("process is not implemented yet")
+
+        _validate_filename(jsfile)
+        data = self.load_json(jsfile)
+        self.cleaned_data = self.clean_dict(data)
+        return self.cleaned_data
 
 
     def save_cleaned(self, output_path):
