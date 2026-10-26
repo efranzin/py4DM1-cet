@@ -1,0 +1,6 @@
+py4DM-1/Exrercise_SEMmeta/.venv/
+py4DM-1/.venv/
+.venv/
+output/
+__pycache__/
+.pytest_cache/
