@@ -9,8 +9,8 @@ import re
 
 # Class for cleaning and formatting SEM metadata from JSON files
 class JsonCleaner:
-    def __init__(self, cleaned_data=None): 
-        # Never use a mutable default argument ({}): it would be shared by every instance.                      
+    def __init__(self, cleaned_data=None):
+        # Never use a mutable default argument ({}): it would be shared by every instance.
         # Initialize the cleaned_data dictionary to store processed metadata
         self.cleaned_data = cleaned_data if cleaned_data is not None else {}
 
@@ -20,9 +20,14 @@ class JsonCleaner:
         Reads a JSON file and returns its content as a Python dict.
         """
 
-	with open(jsfile, 'r', encoding='utf-8') as f:
-		data = json.load(f)
-	return data
+        if not isinstance(jsfile, str):
+            raise TypeError(f'Expected a str, got {type(jsfile).__name__}')
+        elif len(jsfile) == 0:
+            raise ValueError(f'{jsfile} must be a non-empty string')
+
+        with open(jsfile, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data
 
 
     def clean_value(self, value):
@@ -60,7 +65,7 @@ class JsonCleaner:
             return match.group(1) + ' ' + match.group(2)
 
         # If no match is found, return the original value unchanged
-        return value    
+        return value
 
 
     def clean_dict(self, data):
@@ -77,10 +82,17 @@ class JsonCleaner:
         Returns:
             a new dictionary with the cleaned entries
         """
-        
-        # TODO (Task 2): implement this method
-        raise NotImplementedError("clean_dict is not implemented yet")
 
+        if not isinstance(data, dict):
+            raise TypeError(f'Expected a dict, got {type(data).__name__}')
+
+        for key, value in data.items():
+            if value is not None:
+                if isinstance(value, str):
+                    self.cleaned_data[key] = self.clean_value(value)
+                else:
+                    self.cleaned_data[key] = value
+        return self.cleaned_data
 
 
     def process(self, jsfile):
@@ -96,7 +108,7 @@ class JsonCleaner:
 
         Returns:
             the cleaned metadata dictionary
-        """    
+        """
         # TODO (Task 2): implement this method
         raise NotImplementedError("process is not implemented yet")
 
@@ -115,7 +127,7 @@ class JsonCleaner:
 
         Returns:
             None
-        """    
-    
+        """
+
         # TODO (Task 2): implement this method
         raise NotImplementedError("save_cleaned is not implemented yet")
