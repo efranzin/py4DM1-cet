@@ -10,7 +10,7 @@ import re
 def _validate_filename(filename):
     if not isinstance(filename, str):
         raise TypeError(f'Expected a str, got {type(filename).__name__}')
-    elif len(filename) == 0:
+    if not filename:
         raise ValueError(f'{filename} must be a non-empty string')
 
 
@@ -114,7 +114,6 @@ class JsonCleaner:
             the cleaned metadata dictionary
         """
 
-        _validate_filename(jsfile)
         data = self.load_json(jsfile)
         self.cleaned_data = self.clean_dict(data)
         return self.cleaned_data
@@ -136,5 +135,6 @@ class JsonCleaner:
             None
         """
 
-        # TODO (Task 2): implement this method
-        raise NotImplementedError("save_cleaned is not implemented yet")
+        _validate_filename(output_path)
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(self.cleaned_data, f, indent=2, ensure_ascii=False)
