@@ -36,8 +36,13 @@ class SEMVisualizer:
         Reads the cleaned JSON file (self.json_path) into self.metadata.
         """
 
+        with open(self.json_path, "r") as f:
+            f = json.load(f)
+    
+        self.metadata = f
+
         # TODO (Task 3): implement this method
-        raise NotImplementedError("load_metadata is not implemented yet")       
+        # raise NotImplementedError("load_metadata is not implemented yet")       
 
 
     def clean_value(self, raw_value, variable_name=None):
