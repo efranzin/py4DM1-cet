@@ -88,8 +88,15 @@ class SEMVisualizer:
         Return the list of formatted metadata rows
         """
 
+        listMetaData = []
+
+        for v in self.variables:
+            listMetaData.append((v, *self.clean_value(self.metadata.get(v, None))))
+
+        return listMetaData
+
         # TODO (Task 3): implement this method
-        raise NotImplementedError("extract_variables is not implemented yet")
+        #raise NotImplementedError("extract_variables is not implemented yet")
 
 
 
