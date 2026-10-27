@@ -7,13 +7,6 @@ import json
 import re
 
 
-def _validate_filename(filename):
-    if not isinstance(filename, str):
-        raise TypeError(f'Expected a str, got {type(filename).__name__}')
-    if not filename:
-        raise ValueError(f'{filename} must be a non-empty string')
-
-
 # Class for cleaning and formatting SEM metadata from JSON files
 class JsonCleaner:
     def __init__(self, cleaned_data=None):
@@ -27,7 +20,6 @@ class JsonCleaner:
         Reads a JSON file and returns its content as a Python dict.
         """
 
-        _validate_filename(jsfile)
         with open(jsfile, 'r', encoding='utf-8') as f:
             data = json.load(f)
         return data
@@ -135,6 +127,5 @@ class JsonCleaner:
             None
         """
 
-        _validate_filename(output_path)
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(self.cleaned_data, f, indent=2, ensure_ascii=False)
