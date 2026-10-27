@@ -95,9 +95,6 @@ class SEMVisualizer:
 
         return self.listMetaData
 
-        # TODO (Task 3): implement this method
-        #raise NotImplementedError("extract_variables is not implemented yet")
-
     def show_image_with_table(self):
             """
             Displays the SEM image alongside a formatted metadata
