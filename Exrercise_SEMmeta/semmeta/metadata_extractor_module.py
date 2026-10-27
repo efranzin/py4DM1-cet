@@ -206,9 +206,17 @@ class SEMMetaData:
             None
         """
 
-        # TODO (Task 1): implement this method
-        raise NotImplementedError("WriteSEMJson is not implemented yet")    
-        
+        try:
+            # Ensure the parent directory exists
+            Path(file).parent.mkdir(parents=True, exist_ok=True)
+
+            # Open the file in write mode and serialize the metadata dictionary
+            with open(file, "w") as f:
+                json.dump(semdict, f, indent=2)
+
+        except Exception as e:
+            print(f"Error writing JSON to {file}: {str(e)}")
+            
     def WriteProcessingReport(self, file, records):
         """
         Saves the processing status of all SEM images as a text report.
