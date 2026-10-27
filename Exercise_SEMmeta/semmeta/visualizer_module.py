@@ -88,34 +88,71 @@ class SEMVisualizer:
         Return the list of formatted metadata rows
         """
 
-        listMetaData = []
+        self.listMetaData = []
 
         for v in self.variables:
-            listMetaData.append((v, *self.clean_value(self.metadata.get(v, None))))
+            self.listMetaData.append((v, *self.clean_value(self.metadata.get(v, None))))
 
-        return listMetaData
+        return self.listMetaData
 
         # TODO (Task 3): implement this method
         #raise NotImplementedError("extract_variables is not implemented yet")
 
-
-
     def show_image_with_table(self):
-        """
-        Displays the SEM image alongside a formatted metadata
-        table and saves the combined output as a figure.
+            """
+            Displays the SEM image alongside a formatted metadata
+            table and saves the combined output as a figure.
 
-        1. Loads the metadata.
-        2. Builds a figure with two vertically stacked panels:
-           the grayscale SEM image (top) and a table with the
-           column labels "Variable", "Value", "Unit" (bottom).
-        3. Creates the folder ./output if needed.
-        4. Saves the figure as ./output/<image name without extension>.png
-        5. Displays the figure, then closes it.
-        """
+            1. Loads the metadata.
+            2. Builds a figure with two vertically stacked panels:
+            the grayscale SEM image (top) and a table with the
+            column labels "Variable", "Value", "Unit" (bottom).
+            3. Creates the folder ./output if needed.
+            4. Saves the figure as ./output/<image name without extension>.png
+            5. Displays the figure, then closes it.
+            """
+            # 1. Load metadata and prepare data rows
+            self.load_metadata()
+            table_data = self.extract_variables()
+            headers = ["Variable", "Value", "Unit"]
 
-        # TODO (Task 3): implement this method
-        raise NotImplementedError("show_image_with_table is not implemented yet")    
-        
+            # Load image via PIL
+            img = Image.open(self.image_path)
 
- 
+            # 2. Build figure with 2 vertically stacked subplots (top: image, bottom: table)
+            fig, (ax_img, ax_tbl) = plt.subplots(
+                2, 1, figsize=(8, 10), gridspec_kw={'height_ratios': [3, 1]}
+            )
+
+            # Display grayscale SEM image on top panel
+            ax_img.imshow(img, cmap='gray')
+            ax_img.axis('off')
+
+            # Hide axes for the table panel
+            ax_tbl.axis('off')
+
+            # Create table on bottom panel
+            table = ax_tbl.table(
+                cellText=table_data,
+                colLabels=headers,
+                loc='center',
+                cellLoc='center'
+            )
+            table.auto_set_font_size(False)
+            table.set_fontsize(10)
+            table.scale(1, 1.5)
+
+            plt.tight_layout()
+
+            # 3. Create ./output directory if needed
+            output_dir = "./output"
+            os.makedirs(output_dir, exist_ok=True)
+
+            # 4. Generate save path (<image name without extension>.png)
+            base_name = os.path.splitext(os.path.basename(self.image_path))[0]
+            save_path = os.path.join(output_dir, f"{base_name}.png")
+            plt.savefig(save_path, bbox_inches='tight', dpi=300)
+
+            # 5. Display figure and close
+            plt.show()
+            plt.close(fig)
