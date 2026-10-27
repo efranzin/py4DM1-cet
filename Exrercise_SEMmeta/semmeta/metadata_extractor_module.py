@@ -2,6 +2,7 @@
 #
 # Import PIL image module for reading TIFF metadata
 from PIL import Image
+from pathlib import Path
 
 import re
 
@@ -30,9 +31,21 @@ class SEMMetaData:
             False otherwise
         """
 
-        # TODO (Task 1): implement this method
-        raise NotImplementedError("OpenCheckImage is not implemented yet")       
+        try:
 
+            # Open the image using PIL
+            img = Image.open(image)
+
+            # Verify that the image format is TIFF
+            if img.format != "TIFF":
+                print(f"Error: {image} is not a TIFF image.")
+                return False
+
+            return img
+
+        except Exception as e:
+            print(f"Error opening image {image}: {str(e)}")
+            return False
 
     def ImageMetadata(self, img):
         """
