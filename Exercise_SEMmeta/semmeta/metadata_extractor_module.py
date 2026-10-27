@@ -2,6 +2,7 @@
 #
 # Import PIL image module for reading TIFF metadata
 from PIL import Image
+from pathlib import Path
 
 import re
 
@@ -30,9 +31,21 @@ class SEMMetaData:
             False otherwise
         """
 
-        # TODO (Task 1): implement this method
-        raise NotImplementedError("OpenCheckImage is not implemented yet")       
+        try:
 
+            # Open the image using PIL
+            img = Image.open(image)
+
+            # Verify that the image format is TIFF
+            if img.format != "TIFF":
+                print(f"Error: {image} is not a TIFF image.")
+                return False
+
+            return img
+
+        except Exception as e:
+            print(f"Error opening image {image}: {str(e)}")
+            return False
 
     def ImageMetadata(self, img):
         """
@@ -193,9 +206,17 @@ class SEMMetaData:
             None
         """
 
-        # TODO (Task 1): implement this method
-        raise NotImplementedError("WriteSEMJson is not implemented yet")    
-        
+        try:
+            # Ensure the parent directory exists
+            Path(file).parent.mkdir(parents=True, exist_ok=True)
+
+            # Open the file in write mode and serialize the metadata dictionary
+            with open(file, "w", encoding="utf-8") as f:
+                json.dump(semdict, f, indent=2)
+
+        except Exception as e:
+            print(f"Error writing JSON to {file}: {str(e)}")
+
     def WriteProcessingReport(self, file, records):
         """
         Saves the processing status of all SEM images as a text report.
@@ -215,9 +236,28 @@ class SEMMetaData:
             None
         """
 
-        # TODO (Task 1): implement this method
-        raise NotImplementedError("WriteProcessingReport is not implemented yet")
+        try:
+            # Ensure the parent directory exists
+            Path(file).parent.mkdir(parents=True, exist_ok=True)
 
+            # Open the file in write mode
+            with open(file, "w", encoding="utf-8") as f:
+                # Write the title and separator
+                f.write("SEM Metadata Extraction Report\n")
+                f.write("=" * 60 + "\n\n")
+
+                # Write the header row and separator
+                f.write(f"{'Status':<50} {'Image':<10}\n")
+                f.write("-" * 60 + "\n")
+
+                # Write each record in the specified format
+                for record in records:
+                    image = record.get("image", "")
+                    status = record.get("status", "")
+                    f.write(f"{status:<50} {image:<10}\n")
+
+        except Exception as e:
+            print(f"Error writing processing report to {file}: {str(e)}")
  
  
         
